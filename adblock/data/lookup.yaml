@@ -1,0 +1,8 @@
+---
+lookup_options:
+    adblock::url:
+        merge:
+            strategy: 'deep'
+            merge_hash_arrays: true
+            knockout_prefix: '--'
+

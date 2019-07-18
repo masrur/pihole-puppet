@@ -1,0 +1,41 @@
+################################################################################
+# This file is managed by Puppet, and is refreshed regularly.                  #
+# Edit at your own peril!                                                      #
+################################################################################
+# Pi-hole: A black hole for Internet advertisements
+# (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+# Network-wide ad blocking via your own hardware.
+#
+# Updates ad sources every week
+#
+# This file is copyright under the latest version of the EUPL.
+# Please see LICENSE file for your rights under this license.
+#
+#
+#
+# This file is under source-control of the Pi-hole installation and update
+# scripts, any changes made to this file will be overwritten when the softare
+# is updated or re-installed. Please make any changes to the appropriate crontab
+# or other cron file snippets.
+
+# Set PATH
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Pi-hole: Update the ad sources once a week on Sunday at a random time in the
+#          early morning. Download any updates from the adlists
+48 3   * * 7   root     pihole updateGravity
+
+# Pi-hole: Flush the log daily at 00:00
+#          The flush script will use logrotate if available
+#          parameter "once": logrotate only once (default is twice)
+#          parameter "quiet": don't print messages
+00 00   * * *   root    pihole flush once quiet
+
+@reboot root /usr/sbin/logrotate /etc/pihole/logrotate
+
+# Pi-hole: Grab local version and branch every 10 minutes
+*/10 *  * * *   root     pihole updatechecker local
+
+# Pi-hole: Grab remote version every 24 hours
+15 13  * * *   root     pihole updatechecker remote
+@reboot root     pihole updatechecker remote reboot
